@@ -1,7 +1,6 @@
 const nodemailer = require("nodemailer");
 const express = require('express');
 const app = express();
-const port = 3010;
 const  cors = require('cors');
 const bodyParser = require('body-parser');
 
@@ -12,6 +11,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
+let smtp_login = process.env.SMTP_LOGIN || "---";
+let smtp_password = process.env.SMTP_PASSWORD || "---";
+let smtp_receiver = process.env.SMTP_RECEIVER || "---";
+
 
 
 let transporter = nodemailer.createTransport({
@@ -20,8 +23,8 @@ let transporter = nodemailer.createTransport({
     // port: 587,
     // secure: false, // true for 465, false for other ports
     auth: {
-        user: "rn.lazuka@gmail.com", // generated ethereal user
-        pass: "11218536191Ws" // generated ethereal password
+        user: smtp_login, // generated ethereal user
+        pass: smtp_password // generated ethereal password
     }
 });
 
@@ -31,7 +34,7 @@ app.post('/sendMessage',async (req, res) => {
 let {name,mail,text}= req.body;
     let info = await transporter.sendMail({
         from: 'MyProfile', // sender address
-        to: "rn.lazuka@gmail.com", // list of receivers
+        to: smtp_receiver, // list of receivers
         subject: "Новое сообщение", // Subject line
         // text:  // plain text body
         html: `<b>Сообщение с Profile page</b>,<div>Name:${name}</div>
@@ -39,5 +42,7 @@ let {name,mail,text}= req.body;
     });
     res.send("ok")
 });
+
+let port = process.env.PORT || ж
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
