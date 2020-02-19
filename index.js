@@ -43,6 +43,6 @@ let {name,mail,text}= req.body;
     res.send("ok")
 });
 
-let port = process.env.PORT || ж
+let port = process.env.PORT || 3010;
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
